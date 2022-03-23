@@ -1,7 +1,7 @@
 1. 准备 VMware Workstation 的安装包，这里选择的是版本 15
 
 
-2. 双击安装包，如下所示：
+2. 双击安装包，如下所示：  
 ![img.png](images/img.png)
    
 
