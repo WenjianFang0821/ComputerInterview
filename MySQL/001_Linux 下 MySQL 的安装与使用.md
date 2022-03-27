@@ -2,7 +2,7 @@
 ## 1.1 Linux 系统及工具的准备  
 * 安装并启动好两台虚拟机：CentOS 7 系统  
 > [1.安装一台原始的 Linux 系统](https://github.com/WindChaser0821/ComputerInterview/blob/master/Linux/002_VMware%20Workstation%20%E4%B8%8A%20Centos%207%20%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%89%E8%A3%85.md)  
-> [2.克隆多台虚拟机，并修改配置]()
+> [2.克隆多台虚拟机，并修改配置](https://github.com/WindChaser0821/ComputerInterview/blob/master/Linux/003_Linux%20%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%85%8B%E9%9A%86.md)
   
 * 安装有 Xshell 和 Xftp 等访问 CentOS 系统的工具
 * CentOS 6 和 CentOS 7 在 MySQL 的使用中的区别
@@ -280,6 +280,200 @@ Host 设置了 “%” 后便可以允许远程访问。
 
 Host 修改完成后记得执行 flush privileges 使配置立即生效：  
 >flush privileges;  
+
+# 4. 字符集相关操作  
+在 MySQL 8.0 版本之前，默认字符集为 latin1 ，utf8 字符集指向的是 utf8mb3 。网站开发人员在数据库设计的时候往往会将编码修改为 utf8 字符集。如果遗忘修改默认的编码，就会出现乱码的问题。从 MySQL
+8.0 开始，数据库的默认编码将改为 utf8mb4 ，从而避免上述乱码的问题。  
+
+## 4.1 修改 MySQL5.7 字符集  
+### 4.1.1 修改步骤  
+<font color=red>操作 1：查看默认使用的字符集</font>  
+>show variables like 'character%'; 或 show variables like '%char%';  
+
+MySQL 5.7 中执行：  
+MySQL 5.7 默认的客户端和服务器都用了 latin1 ，不支持中文，保存中文会报错。MySQL 5.7 截图如下：  
+![img.png](images/img25.png)  
+
+MySQL 8.0 中执行：  
+![img.png](images/img26.png)  
+
+<font color=red>操作 2：修改字符集</font>  
+>vim /etc/my.cnf  
+
+在 MySQL 5.7 或之前的版本中，在文件最后加上中文字符集配置：  
+>character_set_server=utf8  
+
+![img.png](images/img27.png)  
+
+<font color=red>操作 3：重新启动 MySQL 服务</font>  
+>systemctl restart mysqld  
+
+注意：原库、原表的设定不会发生变化，<font color=green>参数修改只对新建的数据库生效</font>  
+
+### 4.1.2 已有库 & 表字符集的变更  
+MySQL 5.7 版本中，以前创建的库，创建的表字符集还是 latin1。 
+
+修改已创建数据库的字符集：  
+>alter database 数据库名 character set 'utf8';  
+
+修改已创建数据表的字符集：  
+>alter table 表名 convert to character set 'utf8';  
+
+## 4.2 各级别的字符集  
+MySQL 有 4 个级别的字符集和比较规则，分别是：  
+>（1）服务器级别；（2）数据库级别；（3）表级别；（4）列级别  
+
+执行如下 SQL 语句：  
+>show variables like 'character%';  
+
+![img.png](images/img28.png)  
+
+### 4.2.1 服务器级别  
+<font color=orange>character_set_server</font>：服务器级别的字符集  
+我们可以在启动服务器程序时通过启动选项或者在服务器程序运行过程中使用 SET 语句修改这两个变量
+的值。比如我们可以在配置文件中这样写：  
+
+>[server]  
+character_set_server=gbk  # 默认字符集  
+collation_server=gbk_chinese_ci  # 对应的默认的比较规则  
+
+当服务器启动的时候读取这个配置文件后这两个系统变量的值便修改了。  
+
+### 4.2.2 数据库级别  
+<font color=orange>character_set_database</font>：当前数据库的字符集  
+我们在创建和修改数据库的时候可以指定该数据库的字符集和比较规则，具体语法如下：  
+>CREATE DATABASE 数据库名  
+[[DEFAULT] CHARACTER SET 字符集名称]  
+[[DEFAULT] COLLATE 比较规则名称];  
+> 
+>ALTER DATABASE 数据库名  
+[[DEFAULT] CHARACTER SET 字符集名称]  
+[[DEFAULT] COLLATE 比较规则名称];  
+
+### 4.2.3 表级别  
+我们也可以在创建和修改表的时候指定表的字符集和比较规则，语法如下：  
+
+>CREATE TABLE 表名 (列的信息)  
+[[DEFAULT] CHARACTER SET 字符集名称]  
+[COLLATE 比较规则名称]]  
+> 
+>ALTER TABLE 表名  
+[[DEFAULT] CHARACTER SET 字符集名称]  
+[COLLATE 比较规则名称]  
+
+<font color=red>如果创建和修改表的语句中没有指明字符集和比较规则，将使用该表所在数据库的字符集和比较规则作为该表的字符集和比较规则。</font>  
+
+### 4.2.4 列级别  
+对于存储字符串的列，同一个表中的不同的列也可以有不同的字符集和比较规则。我们在创建和修改列定义的时候可以指定该列的字符集和比较规则，语法如下：  
+
+>CREATE TABLE 表名(  
+列名 字符串类型 [CHARACTER SET 字符集名称] [COLLATE 比较规则名称],  
+其他列...  
+);  
+> 
+>ALTER TABLE 表名 MODIFY 列名 字符串类型 [CHARACTER SET 字符集名称] [COLLATE 比较规则名称];  
+
+<font color=red>对于某个列来说，如果在创建和修改的语句中没有指明字符集和比较规则，将使用该列所在表的字符集和比较规则作为该列的字符集和比较规则。</font>  
+
+提示：在转换列的字符集时需要注意，如果转换前列中存储的数据不能用转换后的字符集进行表示会发生错误。比方说原先列使用的字符集是 utf8，列中存储了一些汉字，现在把列的字符集转换为 ascii 的话就会出错，因为 ascii 字符集并不能表示汉字字符。  
+
+### 4.2.5 小结  
+我们介绍的这4个级别字符集和比较规则的联系如下：  
+* 如果 **创建或修改列** 时没有显式的指定字符集和比较规则，则该列 **默认用表的** 字符集和比较规则  
+* 如果 **创建表时** 没有显式的指定字符集和比较规则，则该表 **默认用数据库的** 字符集和比较规则  
+* 如果 **创建数据库时** 没有显式的指定字符集和比较规则，则该数据库 **默认用服务器的** 字符集和比较规则  
+
+知道了这些规则之后，对于给定的表，我们应该知道它的各个列的字符集和比较规则是什么，从而根据这个列的类型来确定存储数据时每个列的实际数据占用的存储空间大小了。比方说我们向表 t 中插入一条记录：  
+
+>mysql> INSERT INTO t(col) VALUES('我们');  
+Query OK, 1 row affected (0.00 sec)  
+> 
+>mysql> SELECT * FROM t;  
++--------+  
+| s   |  
++--------+  
+| 我们  |  
++--------+  
+1 row in set (0.00 sec)  
+
+## 4.3 字符集与比较规则（了解）    
+### 4.3.1 utf8 与 utf8mb4  
+utf8 字符集表示一个字符需要使用 1～4 个字节，但是我们常用的一些字符使用 1～3 个字节就可以表示了。而字符集表示一个字符所用的最大字节长度，在某些方面会影响系统的存储和性能，所以设计 MySQL 的设计者偷偷的定义了两个概念：
+* utf8mb3：阉割过的 utf8 字符集，只使用 1～3 个字节表示字符。  
+* utf8mb4：正宗的 utf8 字符集，使用 1～4 个字节表示字符。  
+
+### 4.3.2 比较规则  
+上表中，MySQL 版本一共支持 41 种字符集，其中的 Default collation 列表示这种字符集中一种默认的比较规则，里面包含着该比较规则主要作用于哪种语言，比如 utf8_polish_ci 表示以波兰语的规则比较， utf8_spanish_ci 是以西班牙语的规则比较， utf8_general_ci 是一种通用的比较规则。  
+
+使用命令查看字符集
+>show charset;  
+
+![img.png](images/img29.png)  
+
+
+后缀表示该比较规则是否区分语言中的重音、大小写。具体如下：
+
+| 后缀 | 英文释义 | 描述 |
+| :------| :------ | :------ |
+| _ai | accent insensitive | 不区分重音 |
+| _as | accent sensitive | 区分重音 |
+| _ci | case insensitive | 不区分大小写 |
+| _cs | case sensitive | 区分大小写 |
+| _bin | binary | 以二进制方式比较 |
+
+最后一列 Maxlen ，它代表该种字符集表示一个字符最多需要几个字节。 
+
+<font color=orange>常用操作 1：</font>  
+>查看 GBK 字符集的比较规则  
+SHOW COLLATION LIKE 'gbk%';  
+
+![img.png](images/img30.png)  
+
+>查看 UTF-8 字符集的比较规则
+SHOW COLLATION LIKE 'utf8%';  
+
+![img.png](images/img31.png)  
+
+<font color=orange>常用操作 2：</font>  
+>查看服务器的字符集和比较规则  
+SHOW VARIABLES LIKE '%_server';  
+> 
+>查看数据库的字符集和比较规则  
+SHOW VARIABLES LIKE '%_database';
+> 
+>查看具体数据库的字符集  
+SHOW CREATE DATABASE dbtest1;  
+> 
+>修改具体数据库的字符集  
+ALTER DATABASE dbtest1 DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';  
+
+<font color=orange>常用操作 3：</font>  
+>查看表的字符集  
+>show create table employees;  
+> 
+>查看表的比较规则  
+show table status from atguigudb like 'employees';  
+> 
+>修改表的字符集和比较规则  
+ALTER TABLE emp1 DEFAULT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
