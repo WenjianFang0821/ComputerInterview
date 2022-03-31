@@ -1,7 +1,7 @@
 # 1. MySQL 8 的主要目录结构  
 >[root@mysql80 ~]# find / -name mysql  
 
-![img.png](images/img32.png)  
+![img.png](../images/img32.png)  
 
 安装好 MySQL 8 之后，我们查看如下的目录结构：  
 
@@ -10,26 +10,26 @@ MySQL 服务器程序在启动时会到文件系统的某个目录下加载一�
 
 MysQL 把数据都存到哪个路径下呢？其实数据目录对应着一个系统变量 datadir，我们在使用客户端与服务器建立连接之后查看这个系统变量的值就可以了：  
 
-![img.png](images/img33.png)
+![img.png](../images/img33.png)
 
 MySQL 数据库文件的存放路径：<font color=orange>/var/lib/mysql/</font>  
 
 切换到该路径下进行查看：  
-![img.png](images/img34.png)  
+![img.png](../images/img34.png)  
 
 从上图中可以看出，<font color=orange>sys</font>、<font color=orange>performance_schema</font> 以及 <font color=orange>mysql</font> 等等，都是已经存在的数据库。  
 
 ## 1.2 相关命令存放的目录  
 对于一个 Linux 程序而言，一般其命令文件都存放在 bin 和 sbin 目录下。而 MySQL 相关命令所在的目录为 /usr/bin（mysqladmin、mysqlbinlog、mysqldump等命令）和 /usr/sbin。  
 
-![img.png](images/img35.png)  
+![img.png](../images/img35.png)  
 
-![img.png](images/img36.png)  
+![img.png](../images/img36.png)  
 
 ## 1.3 配置文件目录  
 配置文件目录：/usr/share/mysql-8.0（命令及配置文件），/etc/mysql（如my.cnf）  
 
-![img.png](images/img37.png)  
+![img.png](../images/img37.png)  
 
 # 2. 数据库和文件系统的关系
 像 InnoDB、MyISAM 这样的存储引擎都是把表存储在磁盘上的，操作系统用来管理磁盘的结构被称为文件系统，所以用专业一点的话来表述就是：<font color=orange>像 InnoDB、MyISAM 这样的存储引擎都是把表存储在文件系统上的。当我们想读取数据的时候，这些存储引擎会从文件系统中把数据读出来返回给我们，当我们想写入数据的时候，这些存储引擎会把这些数据又写回文件系统。</font>本章学习一下 InnoDB 和 MyISAM 这两个存储引擎的数据如何在文件系统中存储。  
@@ -38,7 +38,7 @@ MySQL 数据库文件的存放路径：<font color=orange>/var/lib/mysql/</font>
 查看一下在我的计算机上当前有哪些数据库：  
 >mysql> show databases;  
 
-![img.png](images/img38.png)  
+![img.png](../images/img38.png)  
 
 可以看到有 4 个数据库是属于 MySQL 自带的系统数据库。  
 
@@ -48,7 +48,7 @@ MySQL 系统自带的核心数据库，它存储了 MySQL 的用户账户和权�
 比如：在 mysql 数据库中有一张 user 表，存储相关用户的相关信息
 >select host, user from user;  
 
-![img.png](images/img39.png)
+![img.png](../images/img39.png)
 
 <font color="orange">information_schema：</font>  
 MySQL 系统自带的数据库，这个数据库保存着 MySQL 服务器维护的 **所有其他数据库的信息**，比如有哪些表、哪些视图、哪些触发器、哪些列、哪些索引。这些信息并不是真实的用户数据，而是一些描述性信息，有时候也称之为 **元数据**。在系统数据库 information_schema 中提供了一些以 innodb_sys 开头的表，用于表示内部系统表。  
@@ -67,17 +67,17 @@ MySQL 系统自带的数据库，这个数据库主要是通过 **视图** 的�
 
 在装有 mysql 5.7 的系统中：  
 （1）切换到目录 /var/lib/mysql 下并进行查看，如下所示：  
-![img.png](images/img40.png)    
+![img.png](../images/img40.png)    
 
 （2）进入 atguigu 目录下进行查看，如下所示：  
-![img.png](images/img41.png)  
+![img.png](../images/img41.png)  
 
 在装有 mysql 8.0 的系统中：  
 （1）切换到目录 /var/lib/mysql 下并进行查看，如下所示：  
-![img.png](images/img42.png)  
+![img.png](../images/img42.png)  
 
 （2）进入 atguigu 目录下进行查看，如下所示：  
-![img.png](images/img43.png)  
+![img.png](../images/img43.png)  
 
 <font color=red>通过比较可以发现在 mysql 8.0 中少了 .opt 和 .frm 文件。</font>    
 
@@ -154,11 +154,11 @@ PRIMARY KEY (id)
 
 在 MySQL 5.7 中创建该表格，对应的文件如下所示：  
 
-![img.png](images/img44.png)  
+![img.png](../images/img44.png)  
 
 在 MySQL 8.0 中创建该表格，对应的文件如下所示： 
 
-![img.png](images/img45.png)  
+![img.png](../images/img45.png)  
 
 ## 2.4 小结  
 举例：数据库 a，表 b。  
