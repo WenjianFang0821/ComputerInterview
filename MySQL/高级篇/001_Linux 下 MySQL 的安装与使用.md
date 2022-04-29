@@ -17,11 +17,11 @@
 >systemctl status mysqld.service
   
 * 如果存在 mysql-libs 的旧版本包，显示如下：  
-![img.png](../images/img.png)  
+![img.png](images/img.png)  
   
 
 * 如果不存在 mysql-lib 的版本，显示如下：  
-![img.png](../images/img1.png)  
+![img.png](images/img1.png)  
   
 
 ## 1.3 MySQL 的卸载  
@@ -63,21 +63,21 @@ Server。需要在社区版或企业版的基础上使用。
 
 ### 2.2.2 打开官网，点击 DOWNLOADS  
 然后，点击 MySQL Community(GPL) Downloads  
-![img.png](../images/img2.png)  
+![img.png](images/img2.png)  
 
 ### 2.2.3 点击 MySQL Community Server  
-![img.png](../images/img3.png)  
+![img.png](images/img3.png)  
 
 ### 2.2.4 在 General Availability(GA) Releases 中选择适合的版本  
 * 如果安装 Windows 系统下 MySQL ，推荐下载 MSI 安装程序 ；点击 Go to Download Page 进行下载即可  
 
-![img.png](../images/img4.png)  
+![img.png](images/img4.png)  
 
 ## 2.3 Linux 系统下安装 MySQL 的几种方式  
 ### 2.3.1 Linux 系统下安装软件的常用三种方式  
 <font color=red>方式 1：rpm 命令</font>  
 使用 rpm 命令安装扩展名为 ".rpm" 的软件包, .rpm 包的一般格式：  
-![img.png](../images/img5.png)  
+![img.png](images/img5.png)  
 
 <font color=red>方式 2：yum 命令</font>  
 需联网，从互联网获取的 yum 源，直接使用 yum 命令安装。  
@@ -97,30 +97,30 @@ Server。需要在社区版或企业版的基础上使用。
 * https://downloads.mysql.com/archives/community/ 直接点 Download 下载 RPM Bundle 全量
   包。包括了所有下面的组件。不需要一个一个下载了。  
   
-![img.png](../images/img6.png)  
+![img.png](images/img6.png)  
 
 ## 2.4 将下载好的 tar 包，用压缩工具打开  
-![img.png](../images/img7.png)  
+![img.png](images/img7.png)  
 
 解压后 rpm 安装包 （红框为抽取出来的安装包）  
-![img.png](../images/img8.png)  
+![img.png](images/img8.png)  
 
 ## 2.5 CentOS 7 下检查 MySQL 依赖  
 ### 2.5.1 检查 /tmp 临时目录权限（必不可少）  
 由于 mysql 安装过程中，会通过 mysql 用户在 /tmp 目录下新建 tmp_db 文件，所以请给 /tmp 较大的权限。执行：  
 >chmod -R 777 /tmp  
 
-![img.png](../images/img9.png)  
+![img.png](images/img9.png)  
 ### 2.5.2 安装前，检查依赖  
 >rpm -qa | grep libaio  
 
 如果存在 libaio 包如下：  
-![img.png](../images/img10.png)  
+![img.png](images/img10.png)  
 
 >rpm -qa | grep net-tools  
 
 如果存在 net-tools 包如下：  
-![img.png](../images/img11.png)  
+![img.png](images/img11.png)  
 
 <font color=red>注意：如果不存在，需要到 centos 安装盘里进行 rpm 安装，或者使用 yum 的方式安装</font>
 
@@ -145,7 +145,7 @@ Server。需要在社区版或企业版的基础上使用。
 * -h , --hash 软件包安装的时候列出哈希标记 (和 -v 一起使用效果更好)，展示进度条  
 
 安装过程中可能的报错信息：  
-![img.png](../images/img12.png)
+![img.png](images/img12.png)
 
 一个命令：<font color=red>yum remove mysql-libs</font> 解决，清除之前安装过的依赖即可  
 
@@ -153,12 +153,12 @@ Server。需要在社区版或企业版的基础上使用。
 执行如下命令，如果成功表示安装 mysql 成功。类似 java -version 如果打出版本等信息  
 >mysql --version 或 mysqladmin --version  
 
-![img_1.png](../images/img13.png)  
+![img_1.png](images/img13.png)  
 
 执行如下命令，查看是否安装成功。需要增加 -i 不用去区分大小写，否则搜索不到  
 >rpm -qa | grep -i mysql  
 
-![img.png](../images/img14.png)  
+![img.png](images/img14.png)  
 
 ### 2.6.3 服务的初始化  
 为了保证数据库目录与文件的所有者为 mysql 登录用户，如果你是以 root 身份运行 mysql 服务，需要执行下面的命令初始化：  
@@ -169,7 +169,7 @@ Server。需要在社区版或企业版的基础上使用。
 查看密码：  
 >cat /var/log/mysqld.log  
 
-![img.png](../images/img15.png)  
+![img.png](images/img15.png)  
 
 root@localhost：后面就是初始化的密码  
 
@@ -182,17 +182,17 @@ root@localhost：后面就是初始化的密码
 
 <font color=green>mysqld 这个可执行文件就代表着 MySQL 服务器程序，运行这个可执行文件就可以直接启动一个服务器进程。</font>  
 
-![img.png](../images/img16.png)  
+![img.png](images/img16.png)  
 
 查看进程：
 >ps -ef | grep mysql  
 
-![img.png](../images/img17.png)  
+![img.png](images/img17.png)  
 
 ### 2.6.5 查看 MySQL 服务是否自启动  
 >systemctl list-unit-files|grep mysqld.service  
 
-![img.png](../images/img18.png)  
+![img.png](images/img18.png)  
 
 默认是 enabled。  
 
@@ -205,7 +205,7 @@ root@localhost：后面就是初始化的密码
 # 3. MySQL 登录  
 ## 3.1 首次登录  
 通过  mysql -hlocalhost -P3306 -uroot -p 进行登录，再 Enter password：录入初始化密码  
-![img.png](../images/img19.png)  
+![img.png](images/img19.png)  
 
 ## 3.2 修改密码  
 * 因为初始化密码默认是过期的，所以查看数据库会报错  
@@ -216,7 +216,7 @@ root@localhost：后面就是初始化的密码
 ### 3.3.1 当前问题  
 在用 SQLyog 或 Navicat 中配置远程连接 Mysql 数据库时遇到如下报错信息，这是由于 Mysql 配置了不支持远程连接引起的。  
 
-![img.png](../images/img20.png)  
+![img.png](images/img20.png)  
 
 ### 3.3.2 确认网络  
 1.在远程机器上使用 ping ip 地址 保证网络畅通  
@@ -225,9 +225,9 @@ root@localhost：后面就是初始化的密码
 >telnet ip地址 端口号  
 
 拓展：`telnet 命令开启`  
-![img.png](../images/img21.png)  
+![img.png](images/img21.png)  
 
-![img.png](../images/img22.png)  
+![img.png](images/img22.png)  
 
 ### 3.3.3 关闭防火墙或开放端口  
 <font color=red>方式一：关闭防火墙</font>  
@@ -261,7 +261,7 @@ CentOS7：
 >use mysql;  
 select Host, User from user;  
 
-![img.png](../images/img23.png)  
+![img.png](images/img23.png)  
 
 可以看到 root 用户的当前主机配置信息为 localhost。
 
@@ -276,7 +276,7 @@ select Host, User from user;
 >update user set host = '%' where user ='root';  
 
 Host 设置了 “%” 后便可以允许远程访问。  
-![img.png](../images/img24.png)  
+![img.png](images/img24.png)  
 
 Host 修改完成后记得执行 flush privileges 使配置立即生效：  
 >flush privileges;  
@@ -292,10 +292,10 @@ Host 修改完成后记得执行 flush privileges 使配置立即生效：
 
 MySQL 5.7 中执行：  
 MySQL 5.7 默认的客户端和服务器都用了 latin1 ，不支持中文，保存中文会报错。MySQL 5.7 截图如下：  
-![img.png](../images/img25.png)  
+![img.png](images/img25.png)  
 
 MySQL 8.0 中执行：  
-![img.png](../images/img26.png)  
+![img.png](images/img26.png)  
 
 <font color=red>操作 2：修改字符集</font>  
 >vim /etc/my.cnf  
@@ -303,7 +303,7 @@ MySQL 8.0 中执行：
 在 MySQL 5.7 或之前的版本中，在文件最后加上中文字符集配置：  
 >character_set_server=utf8  
 
-![img.png](../images/img27.png)  
+![img.png](images/img27.png)  
 
 <font color=red>操作 3：重新启动 MySQL 服务</font>  
 >systemctl restart mysqld  
@@ -326,7 +326,7 @@ MySQL 有 4 个级别的字符集和比较规则，分别是：
 执行如下 SQL 语句：  
 >show variables like 'character%';  
 
-![img.png](../images/img28.png)  
+![img.png](images/img28.png)  
 
 ### 4.2.1 服务器级别  
 <font color=orange>character_set_server</font>：服务器级别的字符集  
@@ -408,7 +408,7 @@ utf8 字符集表示一个字符需要使用 1～4 个字节，但是我们常�
 使用命令查看字符集
 >show charset;  
 
-![img.png](../images/img29.png)  
+![img.png](images/img29.png)  
 
 
 后缀表示该比较规则是否区分语言中的重音、大小写。具体如下：
@@ -427,12 +427,12 @@ utf8 字符集表示一个字符需要使用 1～4 个字节，但是我们常�
 >查看 GBK 字符集的比较规则  
 SHOW COLLATION LIKE 'gbk%';  
 
-![img.png](../images/img30.png)  
+![img.png](images/img30.png)  
 
 >查看 UTF-8 字符集的比较规则
 SHOW COLLATION LIKE 'utf8%';  
 
-![img.png](../images/img31.png)  
+![img.png](images/img31.png)  
 
 <font color=orange>常用操作 2：</font>  
 >查看服务器的字符集和比较规则  
